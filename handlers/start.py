@@ -3,11 +3,12 @@ from aiogram.filters import Command
 from config import bot
 from database.async_db import AsyncDatabase
 from database import sql_queries
+from keyboards.start import start_menu_keyboard
 
 router = Router()
 
 @router.message(Command("start"))
-async def start_menu(message: types.message,
+async def start_menu(message: types.Message,
                      db=AsyncDatabase()):
     print(message)
     await db.execute_query(
@@ -19,14 +20,12 @@ async def start_menu(message: types.message,
             message.from_user.first_name,
             message.from_user.last_name
         ),
-        fetch="None"
+        fetch="none"
     )
     await bot.send_message(
         chat_id=message.chat.id,
-        text="HELLO"
+        text=f"Hello {message.from_user.first_name}\n"
+             f"Im your halp_bot, i can register your in profile mode\n"
+             f"new features coming soon...",
+        reply_markup=await start_menu_keyboard()
     )
-
-
-async def start_command(message: types.message):
-  user_id = message.from_user.id
-  username = message.from_user.username
