@@ -22,11 +22,6 @@ async def my_profile_call(call: CallbackQuery,
         fetch="one"
     )
 
-
-    await bot.send_message(
-        chat_id=call.from_user.id,
-        text="send me ur Nickname, please"
-    )
     print(user)
 
     photo = FSInputFile(user['PHOTO'])
@@ -36,3 +31,9 @@ async def my_profile_call(call: CallbackQuery,
         caption=f"Name: {user['NICKNAME']}\n"
                 f"Bio: {user['BIO']}\n"
     )
+
+
+
+
+
+

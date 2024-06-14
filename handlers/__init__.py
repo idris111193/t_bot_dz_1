@@ -6,6 +6,7 @@ def setup_routers () -> Router:
         registration,
         profile,
         like_dislike,
+        reference,
     )
 
 
@@ -16,4 +17,5 @@ def setup_routers () -> Router:
     router.include_router(registration.router)
     router.include_router(profile.router)
     router.include_router(like_dislike.router)
+    router.include_router(reference.router)
     return router
