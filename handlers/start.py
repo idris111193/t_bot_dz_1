@@ -38,10 +38,18 @@ async def start_menu(message: types.Message,
         fetch="none"
     )
 
+    await bot.send_message(
+        chat_id=message.chat.id,
+        text=f"Hello {message.from_user.first_name}\n"
+             f"Im your halp_bot, i can register your in profile mode\n"
+             f"new function wil bi...",
+        reply_markup=await start_menu_keyboard()
+    )
+
 async def process_reference_link(token, message, db=AsyncDatabase()):
         link = await create_start_link(bot=bot, payload=token)
 
-        inviter =   await db.execute_query(
+        inviter = await db.execute_query(
         query=sql_queries.SELECT_USER_BY_LINK_QUERY,
         params=(
             link,
@@ -82,14 +90,6 @@ async def start_menu_keyboard_with_referral():
                                            callback_data="reference_menu")
     keyboard.add(referral_button)
     return keyboard
-
-    await bot.send_message(
-        chat_id=message.chat.id,
-        text=f"Hello {message.from_user.first_name}\n"
-             f"Im your halp_bot, i can register your in profile mode\n"
-             f"new function wil bi...",
-        reply_markup=await start_menu_keyboard()
-    )
 
     async def reference_menu_keyboard():
         keyboard = InlineKeyboardMarkup(row_width=1)

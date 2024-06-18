@@ -57,7 +57,7 @@ async def reference_link_call(call: CallbackQuery,
                  f'{user["REFERENCE_LINK"]}'
         )
 
-@router.callback_query(lambda call: call.data == 'balance')
+@router.callback_query(lambda call: call.data == 'BALANCE')
 async def balance_call(call: CallbackQuery,
                        db=AsyncDatabase()):
     user = await db.execute_query(
@@ -69,7 +69,7 @@ async def balance_call(call: CallbackQuery,
     )
     await bot.send_message(
         chat_id=call.from_user.id,
-        text=f'Your balance:{user["balance"]}'
+        text=f'Your balance:{user["BALANCE"]}'
     )
 
 
