@@ -12,7 +12,7 @@ async def reference_menu_keyboard():
 
     balance_button = InlineKeyboardButton(
         text='View Balance',
-        callback_data='balance'
+        callback_data='BALANCE'
     )
     markup = InlineKeyboardMarkup(inline_keyboard=[
         [link_button],

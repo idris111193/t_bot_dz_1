@@ -3,13 +3,14 @@ from email import message
 
 from aiogram import Router, types
 from aiogram.filters import Command
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 from aiogram.utils.deep_linking import create_start_link
 
 from config import bot
 from database.async_db import AsyncDatabase
 from database import sql_queries
 from keyboards.start import start_menu_keyboard
+from scraper.news_scraper import NewsScraper
 
 router = Router()
 
@@ -84,51 +85,19 @@ async def process_reference_link(token, message, db=AsyncDatabase()):
         except sqlite3.IntegrityError:
             pass
 
-async def start_menu_keyboard_with_referral():
-    keyboard = InlineKeyboardMarkup(row_width=1)
-    referral_button = InlineKeyboardButton(text=" Invite Friends",
-                                           callback_data="reference_menu")
-    keyboard.add(referral_button)
-    return keyboard
 
-    async def reference_menu_keyboard():
-        keyboard = InlineKeyboardMarkup(row_width=1)
-        invite_button = InlineKeyboardButton(text=" Invite Friends", callback_data="reference_invite")
-        balance_button = InlineKeyboardButton(text=" Check Balance", callback_data="reference_balance")
-        keyboard.add(invite_button, balance_button)
-        return keyboard
 
-    async def reference_menu_keyboard(call: CallbackQuery):
+
+@router.callback_query(lambda call: call.data == 'news')
+async def news_call(call: CallbackQuery):
+    scraper = NewsScraper()
+    data = scraper.scrape_data()
+    print(data)
+    for news in data:
         await bot.send_message(
             chat_id=call.from_user.id,
-            text='Welcome to the referral program!\n'
-                 'Invite your friends and earn bonuses.',
-            reply_markup=await reference_menu_keyboard()
+            text="" + news
         )
-
-    async def reference_balance_call(call: CallbackQuery,
-                                     db=AsyncDatabase()):
-        user = await db.execute_query(
-            query=sql_queries.SELECT_USER_QUERY,
-            params=(
-                call.from_user.id,
-            ),
-            fetch="one"
-        )
-        if user:
-            balance = user.get("BALANCE", 0)
-            await bot.send_message(
-                chat_id=call.from_user.id,
-                text=f'Your balance: {balance}'
-            )
-        else:
-            await bot.send_message(
-                chat_id=call.from_user.id,
-                text="Your balance information is not available at the moment."
-            )
-
-
-
 
 
 

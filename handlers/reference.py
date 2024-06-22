@@ -61,7 +61,7 @@ async def reference_link_call(call: CallbackQuery,
 async def balance_call(call: CallbackQuery,
                        db=AsyncDatabase()):
     user = await db.execute_query(
-        query=sql_queries.SELECT_USER_QUERY,
+        query=sql_queries.SELECT_BALANCE_QUERY,
         params=(
             call.from_user.id,
         ),
@@ -69,7 +69,7 @@ async def balance_call(call: CallbackQuery,
     )
     await bot.send_message(
         chat_id=call.from_user.id,
-        text=f'Your balance:{user["BALANCE"]}'
+        text=f'Your balance:{user["COALESCE(BALANCE, 0)"]}'
     )
 
 

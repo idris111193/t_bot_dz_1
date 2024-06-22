@@ -38,3 +38,6 @@ class AsyncDatabase:
             elif fetch == "one":
                 data = await cursor.fetchone()
                 return dict(data) if data else None
+            elif fetch == "all":
+                data = await cursor.fetchall()
+                return [dict(i) for i in data ] if data else None
